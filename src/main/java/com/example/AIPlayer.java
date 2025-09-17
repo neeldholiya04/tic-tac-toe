@@ -2,22 +2,17 @@ package com.example;
 
 // ===== Inheritance & Polymorphism =====
 class AIPlayer extends Player {
-    public AIPlayer(String name, char symbol) {
+    private AIMoveStrategy strategy;
+
+    public AIPlayer(String name, char symbol, AIMoveStrategy strategy) {
         super(name, symbol);
+        this.strategy = strategy;
     }
 
-    // Abstract method implementation for AI player
     @Override
     public int[] makeMove(Board board) {
-        // simple AI → picks the first empty cell
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (board.placeMove(i, j, symbol)) {
-                    System.out.println(name + " placed at (" + i + "," + j + ")");
-                    return new int[]{i, j};
-                }
-            }
-        }
-        return null;
+        int[] move = strategy.computeMove(board, symbol);
+        System.out.println(name + " placed at (" + move[0] + "," + move[1] + ")");
+        return move;
     }
 }

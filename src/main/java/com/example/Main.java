@@ -40,12 +40,25 @@ public class Main {
         String name2 = scanner.next();
         Player p2;
         if (name2.equalsIgnoreCase("AI")) {
-            p2 = new AIPlayer("Computer", 'O');
+            System.out.print("Choose difficulty (easy/medium/hard): ");
+            String level = scanner.next();
+            AIMoveStrategy strategy = switch (level.toLowerCase()) {
+                case "medium" -> new MediumStrategy();
+                case "hard" -> new HardStrategy();
+                default -> new EasyStrategy();
+            };
+            p2 = new AIPlayer("Computer", 'O', strategy);
         } else {
             p2 = new HumanPlayer(name2, 'O', scanner);
         }
 
-        Game game = new Game(p1, p2);
+        System.out.print("Choose rules (national/international): ");
+        String rulesChoice = scanner.next();
+        GameRules rules = rulesChoice.equalsIgnoreCase("international")
+                ? new InternationalRules()
+                : new NationalRules();
+
+        Game game = new Game(p1, p2, rules);
 
         // Start game
         game.start();

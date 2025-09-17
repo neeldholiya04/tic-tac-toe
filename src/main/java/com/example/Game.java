@@ -6,19 +6,16 @@ class Game {
     private Board board;
     private Player player1;
     private Player player2;
+    private GameRules rules;
 
-    public Game(Player p1, Player p2) {
+    public Game(Player p1, Player p2, GameRules rules) {
         this.board = new Board();
         this.player1 = p1;
         this.player2 = p2;
+        this.rules = rules;
     }
 
-    // method overloading
     public void start() {
-        start(Integer.MAX_VALUE);
-    }
-
-    public void start(int maxMoves) {
         int moves = 0;
         Player current = player1;
 
@@ -27,20 +24,16 @@ class Game {
             current.makeMove(board);
             moves++;
 
-            // Check win
-            if (board.checkWin(current.getSymbol())) {
+            if (rules.isWinningMove(board, current)) {
                 board.printBoard();
                 System.out.println(current.getName() + " wins!");
                 break;
-            }
-            // Check draw
-            else if (board.isFull() || moves >= maxMoves) {
+            } else if (rules.isDraw(board, moves, rules.getMaxMoves())) {
                 board.printBoard();
                 System.out.println("It's a draw!");
                 break;
             }
 
-            // Switch turn
             current = (current == player1) ? player2 : player1;
         }
     }
